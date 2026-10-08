@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Logo } from "@/components/Logo";
+import { OfflineStatus } from "@/components/OfflineStatus";
 import { PwaInstallPrompt } from "@/components/PwaInstallPrompt";
 
 export const Route = createFileRoute("/")({
@@ -26,6 +27,9 @@ function Home() {
       <div className="moon-orbit absolute size-[min(94vw,38rem)] rounded-full" aria-hidden="true" />
       <div className="relative flex flex-col items-center">
         <Logo size={88} />
+        <div className="mt-4">
+          <OfflineStatus />
+        </div>
         <p className="moon-kicker mt-7 text-xs font-bold">Create under the moon.</p>
         <h1 className="mt-3 font-display text-5xl text-foreground sm:text-6xl">MoonCanvas</h1>
         <p className="mt-4 max-w-md text-lg text-muted-foreground">

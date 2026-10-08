@@ -2,6 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { Editor } from "tldraw";
 import { Logo } from "@/components/Logo";
+import { OfflineStatus } from "@/components/OfflineStatus";
 import { DrawingSurface } from "@/features/drawing/DrawingSurface";
 import type { RecordingHandle } from "@/features/drawing/recordingController";
 import { formatTime, saveSession } from "@/features/recording/session";
@@ -77,6 +78,7 @@ function DrawPage() {
           <span className="hidden font-display text-xl text-foreground sm:inline">MoonCanvas</span>
         </Link>
         <div className="flex items-center gap-2">
+          <OfflineStatus />
           {recording && (
             <span
               className="flex items-center gap-1.5 text-sm font-semibold text-destructive"

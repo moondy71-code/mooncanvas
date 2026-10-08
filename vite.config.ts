@@ -51,7 +51,10 @@ export default defineConfig({
       },
       workbox: {
         cacheId: "mooncanvas-v1",
+        cleanupOutdatedCaches: true,
+        clientsClaim: false,
         navigateFallback: "/index.html",
+        skipWaiting: false,
       },
     }),
   ],
