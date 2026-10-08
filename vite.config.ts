@@ -18,7 +18,7 @@ export default defineConfig({
     VitePWA({
       registerType: "prompt",
       includeAssets: [
-        "mooncanvas-icon.svg",
+        "mooncanvas-logo.png",
         "mooncanvas-icon-192.png",
         "mooncanvas-icon-512.png",
         "mooncanvas-icon-maskable-512.png",

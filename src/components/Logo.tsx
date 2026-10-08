@@ -1,7 +1,7 @@
 export function Logo({ size = 40 }: { size?: number }) {
   return (
     <img
-      src="/mooncanvas-icon.svg"
+      src="/mooncanvas-logo.png"
       width={size}
       height={size}
       alt="MoonCanvas"
