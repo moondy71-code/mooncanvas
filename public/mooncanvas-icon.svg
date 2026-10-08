@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">MoonCanvas crescent moon and star</title>
+  <rect width="512" height="512" rx="112" fill="#172342"/>
+  <path fill="#F6DE91" d="M310 92c-79 19-135 90-135 172 0 97 79 176 176 176 46 0 88-18 120-48-35 51-94 84-160 84-107 0-194-87-194-194 0-94 67-173 156-191 12-2 24-3 37-3Z"/>
+  <path fill="#FFF9E9" d="m376 147 9 29 29 9-29 9-9 29-9-29-29-9 29-9z"/>
+  <circle cx="349" cy="120" r="7" fill="#DCDCF5"/>
+  <circle cx="407" cy="263" r="5" fill="#DCDCF5"/>
+</svg>

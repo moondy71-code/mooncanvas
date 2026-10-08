@@ -3,22 +3,24 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#50aeb9" />
+    <meta name="theme-color" content="#172342" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <link rel="preload" as="image" href="/mindcanvas-splash.png" />
-    <link rel="apple-touch-icon" href="/mindcanvas-icon.png" />
+    <link rel="apple-touch-icon" href="/mooncanvas-icon-192.png" />
     <meta name="description" content="A private, browser-based drawing space." />
     <meta name="application-name" content="MoonCanvas" />
     <meta name="author" content="MoonCanvas" />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="/mindcanvas-icon.png" />
+    <meta property="og:image" content="/mooncanvas-icon-512.png" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:image" content="/mindcanvas-icon.png" />
+    <meta name="twitter:image" content="/mooncanvas-icon-512.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Nunito+Sans:wght@400;600;700&display=swap" />
-    <link rel="icon" href="/mindcanvas-icon.png" type="image/png" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Nunito+Sans:wght@400;600;700&display=swap"
+    />
+    <link rel="icon" href="/favicon.png" type="image/png" />
     <title>MoonCanvas</title>
     <style>
       #mc-splash {
@@ -36,7 +38,9 @@
           radial-gradient(circle at 50% 12%, rgb(255 255 255 / 72%), transparent 42%),
           linear-gradient(145deg, #fff7df, #fff0d1 55%, #ffe6c5);
         opacity: 1;
-        transition: opacity 420ms ease-out, visibility 420ms ease-out;
+        transition:
+          opacity 420ms ease-out,
+          visibility 420ms ease-out;
         animation: mc-splash-fade-in 360ms ease-out both;
       }
 
@@ -70,19 +74,40 @@
       }
 
       @keyframes mc-splash-fade-in {
-        from { opacity: 0; }
-        to { opacity: 1; }
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
       }
 
       @media (prefers-reduced-motion: reduce) {
-        #mc-splash { animation: none; transition-duration: 1ms; }
+        #mc-splash {
+          animation: none;
+          transition-duration: 1ms;
+        }
+      }
+      #mc-splash {
+        background:
+          radial-gradient(circle at 50% 34%, rgb(246 222 145 / 12%), transparent 27%), #172342;
+      }
+      #mc-splash img {
+        width: min(42vw, 230px);
+        max-height: none;
+        aspect-ratio: 1;
+        border-radius: 26%;
+        box-shadow: 0 20px 54px rgb(3 10 28 / 60%);
+      }
+      #mc-splash-credit {
+        color: #dcdcf5;
       }
     </style>
   </head>
   <body>
     <div id="mc-splash" aria-hidden="true">
-      <img src="/mindcanvas-splash.png" width="941" height="1672" alt="" />
-      <p id="mc-splash-credit">Created by moondy712016@gmail.com</p>
+      <img src="/mooncanvas-icon.svg" width="512" height="512" alt="" />
+      <p id="mc-splash-credit">MoonCanvas · Create under the moon.</p>
     </div>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>

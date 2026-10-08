@@ -10,9 +10,15 @@ export const Route = createFileRoute("/draw")({
   head: () => ({
     meta: [
       { title: "Draw — MoonCanvas" },
-      { name: "description", content: "Draw freely on a clean white canvas with pens, colours and an optional A4 guide." },
+      {
+        name: "description",
+        content: "Draw freely on a clean white canvas with pens, colours and an optional A4 guide.",
+      },
       { property: "og:title", content: "Draw — MoonCanvas" },
-      { property: "og:description", content: "Draw freely on a clean white canvas with pens, colours and an optional A4 guide." },
+      {
+        property: "og:description",
+        content: "Draw freely on a clean white canvas with pens, colours and an optional A4 guide.",
+      },
     ],
   }),
   component: DrawPage,
@@ -65,14 +71,17 @@ function DrawPage() {
 
   return (
     <div className="flex h-dvh flex-col bg-soft">
-      <header className="flex min-h-14 shrink-0 flex-wrap items-center justify-between gap-2 px-3 py-1.5 sm:px-5">
+      <header className="flex min-h-14 shrink-0 flex-wrap items-center justify-between gap-2 border-b border-border bg-card/90 px-3 py-1.5 backdrop-blur sm:px-5">
         <Link to="/" className="flex items-center gap-2">
           <Logo size={32} />
           <span className="hidden font-display text-xl text-foreground sm:inline">MoonCanvas</span>
         </Link>
         <div className="flex items-center gap-2">
           {recording && (
-            <span className="flex items-center gap-1.5 text-sm font-semibold text-destructive" role="status">
+            <span
+              className="flex items-center gap-1.5 text-sm font-semibold text-destructive"
+              role="status"
+            >
               <span className="size-2.5 animate-pulse rounded-full bg-destructive" />
               REC {formatTime(now - recStart)}
             </span>
@@ -113,7 +122,7 @@ function DrawPage() {
         </div>
       </header>
       <div
-        className={`relative mx-2 mb-2 flex-1 overflow-hidden rounded-3xl bg-card shadow-soft sm:mx-4 sm:mb-4 ${
+        className={`moon-canvas-frame relative mx-2 mb-2 flex-1 overflow-hidden rounded-3xl bg-card shadow-soft sm:mx-4 sm:mb-4 ${
           recording ? "ring-2 ring-destructive" : ""
         }`}
       >
