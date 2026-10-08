@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#50aeb9" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <link rel="preload" as="image" href="/mindcanvas-splash.png" />
+    <link rel="apple-touch-icon" href="/mindcanvas-icon.png" />
+    <meta name="description" content="A private, browser-based drawing space." />
+    <meta name="application-name" content="MoonCanvas" />
+    <meta name="author" content="MoonCanvas" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="/mindcanvas-icon.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="/mindcanvas-icon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Nunito+Sans:wght@400;600;700&display=swap" />
+    <link rel="icon" href="/mindcanvas-icon.png" type="image/png" />
+    <title>MoonCanvas</title>
+    <style>
+      #mc-splash {
+        position: fixed;
+        z-index: 2147483647;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        box-sizing: border-box;
+        height: 100svh;
+        min-height: 100svh;
+        padding: clamp(18px, 5svh, 56px) clamp(16px, 5vw, 64px);
+        overflow: hidden;
+        background:
+          radial-gradient(circle at 50% 12%, rgb(255 255 255 / 72%), transparent 42%),
+          linear-gradient(145deg, #fff7df, #fff0d1 55%, #ffe6c5);
+        opacity: 1;
+        transition: opacity 420ms ease-out, visibility 420ms ease-out;
+        animation: mc-splash-fade-in 360ms ease-out both;
+      }
+
+      #mc-splash img {
+        display: block;
+        width: min(94vw, calc((100svh - clamp(36px, 10svh, 112px)) * 0.5628), 720px);
+        height: auto;
+        max-height: min(90svh, 1100px);
+        aspect-ratio: 941 / 1672;
+        object-fit: contain;
+        border-radius: clamp(18px, 3vw, 30px);
+        box-shadow: 0 20px 54px rgb(125 77 30 / 18%);
+      }
+
+      #mc-splash-credit {
+        position: absolute;
+        inset: auto 0 clamp(10px, 2.5svh, 26px);
+        margin: 0;
+        color: rgb(65 45 75 / 68%);
+        font-family: "Nunito Sans", system-ui, sans-serif;
+        font-size: clamp(11px, 2.7vw, 14px);
+        font-weight: 600;
+        letter-spacing: 0.02em;
+        text-align: center;
+      }
+
+      #mc-splash.mc-splash--leaving {
+        visibility: hidden;
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      @keyframes mc-splash-fade-in {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        #mc-splash { animation: none; transition-duration: 1ms; }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="mc-splash" aria-hidden="true">
+      <img src="/mindcanvas-splash.png" width="941" height="1672" alt="" />
+      <p id="mc-splash-credit">Created by moondy712016@gmail.com</p>
+    </div>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
