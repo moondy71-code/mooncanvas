@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import type { Editor } from "tldraw";
 import { MindCanvasStylePanel } from "./CustomColorPicker";
 import { MindCanvasDrawShapeUtil, installCustomColorStamp } from "./customColor";
+import { getGroupControlState } from "./groupControls";
 
 // A4 portrait in page units (210 x 297 mm scaled)
 const A4_W = 794;
@@ -45,8 +46,46 @@ function MindCanvasOnTheCanvas() {
   );
 }
 
+function GroupControls() {
+  const editor = useEditor();
+  const selectedShapes = useValue(
+    "selected shapes for grouping",
+    () => editor.getSelectedShapes(),
+    [editor],
+  );
+  const { canGroup, canUngroup } = getGroupControlState(selectedShapes);
+
+  if (!selectedShapes.length) return null;
+
+  return (
+    <div className="mc-group-controls" role="toolbar" aria-label="Selection editing">
+      <button
+        type="button"
+        disabled={!canGroup}
+        onClick={() => editor.groupShapes(selectedShapes.map((shape) => shape.id))}
+        title="Group selected items"
+      >
+        Group <span lang="ko">묶기</span>
+      </button>
+      <button
+        type="button"
+        disabled={!canUngroup}
+        onClick={() =>
+          editor.ungroupShapes(
+            selectedShapes.filter((shape) => shape.type === "group").map((shape) => shape.id),
+          )
+        }
+        title="Ungroup selected items"
+      >
+        Ungroup <span lang="ko">풀기</span>
+      </button>
+    </div>
+  );
+}
+
 const components: TLComponents = {
   OnTheCanvas: MindCanvasOnTheCanvas,
+  InFrontOfTheCanvas: GroupControls,
   StylePanel: MindCanvasStylePanel,
 };
 export const drawingShapeUtils = [MindCanvasDrawShapeUtil];

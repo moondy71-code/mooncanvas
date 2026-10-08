@@ -341,3 +341,45 @@ body {
 .moon-canvas-frame {
   border: 1px solid rgb(220 220 245 / 18%);
 }
+.mc-group-controls {
+  position: absolute;
+  top: max(10px, env(safe-area-inset-top));
+  left: 50%;
+  z-index: 1;
+  display: flex;
+  gap: 8px;
+  transform: translateX(-50%);
+  pointer-events: auto;
+}
+.mc-group-controls button {
+  min-height: 40px;
+  border: 1px solid rgb(220 220 245 / 30%);
+  border-radius: 999px;
+  padding: 0 14px;
+  background: rgb(36 54 87 / 94%);
+  color: var(--moon-cream);
+  box-shadow: 0 8px 22px rgb(3 10 28 / 28%);
+  font-size: 13px;
+  font-weight: 700;
+  touch-action: manipulation;
+}
+.mc-group-controls button:first-child:not(:disabled) {
+  border-color: var(--moon-gold);
+  background: var(--moon-gold);
+  color: var(--moon-bg);
+}
+.mc-group-controls button:disabled {
+  opacity: 0.42;
+  cursor: not-allowed;
+}
+@media (max-width: 480px) {
+  .mc-group-controls {
+    top: max(6px, env(safe-area-inset-top));
+    gap: 6px;
+  }
+  .mc-group-controls button {
+    min-height: 38px;
+    padding: 0 10px;
+    font-size: 12px;
+  }
+}
