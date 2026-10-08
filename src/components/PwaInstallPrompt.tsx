@@ -6,9 +6,10 @@ type BeforeInstallPromptEvent = Event & {
 };
 
 const isStandalone = () =>
-  window.matchMedia("(display-mode: standalone)").matches || (navigator as Navigator & { standalone?: boolean }).standalone === true;
+  window.matchMedia("(display-mode: standalone)").matches ||
+  (navigator as Navigator & { standalone?: boolean }).standalone === true;
 
-/** A browser-only install prompt. It never affects active live-session connections. */
+/** A browser-only install prompt. */
 export function PwaInstallPrompt() {
   const [prompt, setPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [standalone, setStandalone] = useState(true);
@@ -16,7 +17,10 @@ export function PwaInstallPrompt() {
 
   useEffect(() => {
     setStandalone(isStandalone());
-    setIsIos(/iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as Window & { MSStream?: unknown }).MSStream);
+    setIsIos(
+      /iPad|iPhone|iPod/.test(navigator.userAgent) &&
+        !(window as Window & { MSStream?: unknown }).MSStream,
+    );
     const onBeforeInstall = (event: Event) => {
       event.preventDefault();
       setPrompt(event as BeforeInstallPromptEvent);
@@ -47,11 +51,20 @@ export function PwaInstallPrompt() {
       <h2 className="font-display text-2xl text-foreground">Install MoonCanvas</h2>
       {prompt ? (
         <>
-          <p className="mt-2 text-sm text-muted-foreground">Install MoonCanvas on this device for a full-screen app experience.</p>
-          <button onClick={() => void install()} className="mt-4 min-h-11 rounded-full bg-primary px-5 font-semibold text-primary-foreground">Install app</button>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Install MoonCanvas on this device for a full-screen app experience.
+          </p>
+          <button
+            onClick={() => void install()}
+            className="mt-4 min-h-11 rounded-full bg-primary px-5 font-semibold text-primary-foreground"
+          >
+            Install app
+          </button>
         </>
       ) : (
-        <p className="mt-2 text-sm text-muted-foreground">In Safari, tap Share, then choose <strong>Add to Home Screen</strong>.</p>
+        <p className="mt-2 text-sm text-muted-foreground">
+          In Safari, tap Share, then choose <strong>Add to Home Screen</strong>.
+        </p>
       )}
     </section>
   );

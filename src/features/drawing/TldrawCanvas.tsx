@@ -1,4 +1,4 @@
-import { DefaultNavigationPanel, Tldraw, useEditor, useValue, type TLComponents } from "tldraw";
+import { Tldraw, useEditor, useValue, type TLComponents } from "tldraw";
 import "tldraw/tldraw.css";
 import { useEffect } from "react";
 import type { Editor } from "tldraw";
@@ -11,7 +11,11 @@ const A4_H = 1123;
 
 function A4Guide() {
   const editor = useEditor();
-  const show = useValue("a4", () => (editor.getInstanceState().meta as { a4?: boolean }).a4 ?? false, [editor]);
+  const show = useValue(
+    "a4",
+    () => (editor.getInstanceState().meta as { a4?: boolean }).a4 ?? false,
+    [editor],
+  );
   if (!show) return null;
   return (
     <div
@@ -33,71 +37,58 @@ function SelectedShapesToFront() {
 }
 
 function MindCanvasOnTheCanvas() {
-  return <><A4Guide /><SelectedShapesToFront /></>;
+  return (
+    <>
+      <A4Guide />
+      <SelectedShapesToFront />
+    </>
+  );
 }
 
-const components: TLComponents = { OnTheCanvas: MindCanvasOnTheCanvas, StylePanel: MindCanvasStylePanel };
-/** Therapist-only observer UI: navigation remains, all editing controls are absent. */
-const observerComponents: TLComponents = {
-  ...components,
-  ActionsMenu: null,
-  ContextMenu: null,
-  HelpMenu: null,
-  MainMenu: null,
-  Minimap: null,
-  PageMenu: null,
-  StylePanel: null,
-  Toolbar: null,
-  RichTextToolbar: null,
-  ImageToolbar: null,
-  VideoToolbar: null,
-  KeyboardShortcutsDialog: null,
-  QuickActions: null,
-  HelperButtons: null,
-  MenuPanel: null,
-  TopPanel: null,
-  SharePanel: null,
-  NavigationPanel: DefaultNavigationPanel,
+const components: TLComponents = {
+  OnTheCanvas: MindCanvasOnTheCanvas,
+  StylePanel: MindCanvasStylePanel,
 };
 export const drawingShapeUtils = [MindCanvasDrawShapeUtil];
 
 export interface TldrawCanvasProps {
   showA4: boolean;
-  /** Enables pan and zoom while disabling all drawing/editing actions. */
-  readOnly?: boolean;
   /** Gives the page a handle to the engine (used by the recording controller). */
   onEditor?: (editor: Editor | null) => void;
 }
 
-export default function TldrawCanvas({ showA4, readOnly = false, onEditor }: TldrawCanvasProps) {
+export default function TldrawCanvas({ showA4, onEditor }: TldrawCanvasProps) {
   // tldraw validates this client-side production license. It is a public SDK
   // license key, supplied only through Vite's build environment.
   const licenseKey = import.meta.env["VITE_TLDRAW_LICENSE_KEY"] as string | undefined;
 
   return (
     <Tldraw
-      components={readOnly ? observerComponents : components}
+      components={components}
       shapeUtils={drawingShapeUtils}
       persistenceKey="mooncanvas"
       {...(licenseKey ? { licenseKey } : {})}
       onMount={(editor) => {
-        editor.setCurrentTool(readOnly ? "hand" : "draw");
-        editor.updateInstanceState({ isReadonly: readOnly, meta: { a4: showA4 } });
+        editor.setCurrentTool("draw");
+        editor.updateInstanceState({ meta: { a4: showA4 } });
         const stopCustomColorStamp = installCustomColorStamp(editor);
         (window as unknown as { __mcEditor?: unknown }).__mcEditor = editor;
         onEditor?.(editor);
-        return () => { stopCustomColorStamp(); onEditor?.(null); };
+        return () => {
+          stopCustomColorStamp();
+          onEditor?.(null);
+        };
       }}
     >
-      <A4Sync showA4={showA4} readOnly={readOnly} />
+      <A4Sync showA4={showA4} />
     </Tldraw>
   );
 }
 
-function A4Sync({ showA4, readOnly }: { showA4: boolean; readOnly: boolean }) {
+function A4Sync({ showA4 }: { showA4: boolean }) {
   const editor = useEditor();
   useEffect(() => {
-    editor.updateInstanceState({ isReadonly: readOnly, meta: { a4: showA4 } });
-  }, [editor, readOnly, showA4]);
+    editor.updateInstanceState({ meta: { a4: showA4 } });
+  }, [editor, showA4]);
   return null;
 }

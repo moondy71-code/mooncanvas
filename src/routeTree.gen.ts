@@ -13,7 +13,6 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as DrawRouteImport } from './routes/draw'
 import { Route as PlaybackRouteImport } from './routes/playback'
 import { Route as LabRecordingRouteImport } from './routes/lab.recording'
-import { Route as SessionSessionIdRouteImport } from './routes/session.$sessionId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -35,25 +34,18 @@ const LabRecordingRoute = LabRecordingRouteImport.update({
   path: '/lab/recording',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SessionSessionIdRoute = SessionSessionIdRouteImport.update({
-  id: '/session/$sessionId',
-  path: '/session/$sessionId',
-  getParentRoute: () => rootRouteImport,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/draw': typeof DrawRoute
   '/playback': typeof PlaybackRoute
   '/lab/recording': typeof LabRecordingRoute
-  '/session/$sessionId': typeof SessionSessionIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/draw': typeof DrawRoute
   '/playback': typeof PlaybackRoute
   '/lab/recording': typeof LabRecordingRoute
-  '/session/$sessionId': typeof SessionSessionIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -61,21 +53,13 @@ export interface FileRoutesById {
   '/draw': typeof DrawRoute
   '/playback': typeof PlaybackRoute
   '/lab/recording': typeof LabRecordingRoute
-  '/session/$sessionId': typeof SessionSessionIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    '/' | '/draw' | '/playback' | '/lab/recording' | '/session/$sessionId'
+  fullPaths: '/' | '/draw' | '/playback' | '/lab/recording'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/draw' | '/playback' | '/lab/recording' | '/session/$sessionId'
-  id:
-    | '__root__'
-    | '/'
-    | '/draw'
-    | '/playback'
-    | '/lab/recording'
-    | '/session/$sessionId'
+  to: '/' | '/draw' | '/playback' | '/lab/recording'
+  id: '__root__' | '/' | '/draw' | '/playback' | '/lab/recording'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -83,7 +67,6 @@ export interface RootRouteChildren {
   DrawRoute: typeof DrawRoute
   PlaybackRoute: typeof PlaybackRoute
   LabRecordingRoute: typeof LabRecordingRoute
-  SessionSessionIdRoute: typeof SessionSessionIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -116,13 +99,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LabRecordingRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/session/$sessionId': {
-      id: '/session/$sessionId'
-      path: '/session/$sessionId'
-      fullPath: '/session/$sessionId'
-      preLoaderRoute: typeof SessionSessionIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
   }
 }
 
@@ -131,7 +107,6 @@ const rootRouteChildren: RootRouteChildren = {
   DrawRoute: DrawRoute,
   PlaybackRoute: PlaybackRoute,
   LabRecordingRoute: LabRecordingRoute,
-  SessionSessionIdRoute: SessionSessionIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

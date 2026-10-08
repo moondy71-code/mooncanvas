@@ -1,9 +1,0 @@
-{
-  "name": "mindcanvas-live-relay",
-  "main": "src/index.ts",
-  "compatibility_date": "2026-10-02",
-  "durable_objects": {
-    "bindings": [{ "name": "SESSION_RELAY", "class_name": "SessionRelay" }]
-  },
-  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["SessionRelay"] }]
-}

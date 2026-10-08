@@ -49,17 +49,4 @@ describe("App routing", () => {
     expect(await screen.findByText("Install MoonCanvas")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Install app" })).toBeInTheDocument();
   });
-
-  it("does not register or show an install prompt on a disabled session URL", async () => {
-    const addEventListener = vi.spyOn(window, "addEventListener");
-    const { container } = renderAt("/session/client-invitation-session");
-
-    await waitFor(() => expect(container.firstChild).not.toBeNull());
-    expect(await screen.findByText("Sessions unavailable")).toBeInTheDocument();
-    expect(addEventListener).not.toHaveBeenCalledWith("beforeinstallprompt", expect.any(Function));
-    expect(screen.queryByText("Install MoonCanvas")).not.toBeInTheDocument();
-    expect(screen.queryByText("Add to Home Screen")).not.toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: "Install app" })).not.toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Back home" })).toBeInTheDocument();
-  });
 });
