@@ -12,6 +12,13 @@ import {
   type MoonCanvasDocument,
 } from "@/features/drawing/documents";
 
+type DrawingModal = {
+  mode: "rename" | "delete";
+  document: MoonCanvasDocument;
+  name?: string;
+  error?: string;
+};
+
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
@@ -34,8 +41,18 @@ function Home() {
   const navigate = useNavigate();
   const [documents, setDocuments] = useState<MoonCanvasDocument[]>([]);
   const [activeMenuId, setActiveMenuId] = useState<string | null>(null);
+  const [modal, setModal] = useState<DrawingModal | null>(null);
 
   useEffect(() => setDocuments(listDocuments()), []);
+
+  useEffect(() => {
+    if (!modal) return;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setModal(null);
+    };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [modal]);
 
   const openDrawing = (document: MoonCanvasDocument) => {
     navigate({ to: "/draw", search: { document: document.id } });
@@ -47,11 +64,10 @@ function Home() {
     navigate({ to: "/draw", search: { document: document.id } });
   };
 
-  const renameDrawing = (document: MoonCanvasDocument) => {
-    const name = window.prompt("Name this drawing", document.name);
-    if (!name || !renameDocument(document.id, name)) return;
+  const confirmRename = () => {
+    if (!modal || modal.mode !== "rename" || !modal.name || !renameDocument(modal.document.id, modal.name)) return;
     setDocuments(listDocuments());
-    setActiveMenuId(null);
+    setModal(null);
   };
 
   const duplicateDrawing = async (document: MoonCanvasDocument) => {
@@ -61,15 +77,25 @@ function Home() {
     openDrawing(duplicate);
   };
 
-  const removeDrawing = async (document: MoonCanvasDocument) => {
-    if (!window.confirm(`Delete “${document.name}”? This removes it from this device.`)) return;
+  const confirmDelete = async () => {
+    if (!modal || modal.mode !== "delete") return;
     try {
-      await deleteDocument(document);
+      await deleteDocument(modal.document);
       setDocuments(listDocuments());
+      setModal(null);
     } catch {
-      window.alert("This drawing could not be deleted. Close any other MoonCanvas tabs and try again.");
+      setModal((current) => current ? { ...current, error: "Close any other MoonCanvas tabs and try again." } : null);
     }
+  };
+
+  const openRenameModal = (document: MoonCanvasDocument) => {
     setActiveMenuId(null);
+    setModal({ mode: "rename", document, name: document.name });
+  };
+
+  const openDeleteModal = (document: MoonCanvasDocument) => {
+    setActiveMenuId(null);
+    setModal({ mode: "delete", document });
   };
 
   return (
@@ -120,9 +146,9 @@ function Home() {
                 </button>
                 {activeMenuId === document.id ? (
                   <div id={`drawing-options-${document.id}`} className="moon-drawing-menu" role="menu" aria-label={`Options for ${document.name}`}>
-                    <button type="button" role="menuitem" onClick={() => renameDrawing(document)}>Rename</button>
+                    <button type="button" role="menuitem" onClick={() => openRenameModal(document)}>Rename</button>
                     <button type="button" role="menuitem" onClick={() => void duplicateDrawing(document)}>Duplicate</button>
-                    <button type="button" role="menuitem" className="is-danger" onClick={() => void removeDrawing(document)}>Delete</button>
+                    <button type="button" role="menuitem" className="is-danger" onClick={() => openDeleteModal(document)}>Delete</button>
                   </div>
                 ) : null}
               </div>
@@ -137,6 +163,34 @@ function Home() {
           Open recording
         </Link>
       </div>
+      {modal ? (
+        <div className="moon-modal-backdrop" role="presentation" onMouseDown={() => setModal(null)}>
+          <div className="moon-modal" role="dialog" aria-modal="true" aria-labelledby="drawing-modal-title" onMouseDown={(event) => event.stopPropagation()}>
+            {modal.mode === "rename" ? (
+              <form onSubmit={(event) => { event.preventDefault(); confirmRename(); }}>
+                <h2 id="drawing-modal-title" className="font-display text-2xl text-foreground">Rename drawing</h2>
+                <label className="sr-only" htmlFor="drawing-name">Drawing name</label>
+                <input id="drawing-name" className="moon-modal-input mt-5" autoFocus value={modal.name ?? ""} onChange={(event) => setModal({ ...modal, name: event.target.value })} />
+                <div className="mt-5 flex justify-end gap-3">
+                  <button type="button" className="moon-modal-cancel" onClick={() => setModal(null)}>Cancel</button>
+                  <button type="submit" className="moon-modal-primary">Save</button>
+                </div>
+              </form>
+            ) : null}
+            {modal.mode === "delete" ? (
+              <>
+                <h2 id="drawing-modal-title" className="font-display text-2xl text-foreground">Delete drawing?</h2>
+                <p className="mt-2 text-sm text-muted-foreground">This cannot be undone.</p>
+                {modal.error ? <p className="mt-2 text-sm text-[#ffb7bb]">{modal.error}</p> : null}
+                <div className="mt-5 flex justify-end gap-3">
+                  <button type="button" className="moon-modal-cancel" onClick={() => setModal(null)}>Cancel</button>
+                  <button type="button" className="moon-modal-danger" onClick={() => void confirmDelete()}>Delete</button>
+                </div>
+              </>
+            ) : null}
+          </div>
+        </div>
+      ) : null}
       <p className="absolute inset-x-0 bottom-[max(1.25rem,env(safe-area-inset-bottom))] px-6 text-xs font-semibold tracking-wide text-muted-foreground/75">
         Created by moondy712016@gmail.com
       </p>
