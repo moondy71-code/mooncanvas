@@ -48,7 +48,7 @@ function PlaybackPage() {
             Open recording
             <input type="file" accept="application/json,.json" className="sr-only" onChange={(e) => openFile(e.target.files?.[0])} />
           </label>
-          <Link to="/draw" className="inline-flex min-h-11 items-center rounded-full bg-card px-4 text-sm font-semibold text-foreground shadow-soft">
+          <Link to="/draw" search={{ document: undefined }} className="inline-flex min-h-11 items-center rounded-full bg-card px-4 text-sm font-semibold text-foreground shadow-soft">
             Back to drawing
           </Link>
         </div>
@@ -65,7 +65,7 @@ function PlaybackPage() {
         ) : (
           <div className="flex h-full flex-col items-center justify-center gap-4 rounded-3xl bg-card text-center shadow-soft">
             <p className="text-muted-foreground">No recording yet on this device.</p>
-            <Link to="/draw" className="inline-flex min-h-11 items-center rounded-full bg-primary px-6 font-semibold text-primary-foreground">
+            <Link to="/draw" search={{ document: undefined }} className="inline-flex min-h-11 items-center rounded-full bg-primary px-6 font-semibold text-primary-foreground">
               Start drawing
             </Link>
           </div>

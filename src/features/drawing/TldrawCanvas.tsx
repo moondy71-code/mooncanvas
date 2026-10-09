@@ -92,11 +92,13 @@ export const drawingShapeUtils = [MindCanvasDrawShapeUtil];
 
 export interface TldrawCanvasProps {
   showA4: boolean;
+  /** Browser-local namespace for this drawing's automatic persistence. */
+  persistenceKey: string;
   /** Gives the page a handle to the engine (used by the recording controller). */
   onEditor?: (editor: Editor | null) => void;
 }
 
-export default function TldrawCanvas({ showA4, onEditor }: TldrawCanvasProps) {
+export default function TldrawCanvas({ showA4, persistenceKey, onEditor }: TldrawCanvasProps) {
   // tldraw validates this client-side production license. It is a public SDK
   // license key, supplied only through Vite's build environment.
   const licenseKey = import.meta.env["VITE_TLDRAW_LICENSE_KEY"] as string | undefined;
@@ -105,7 +107,7 @@ export default function TldrawCanvas({ showA4, onEditor }: TldrawCanvasProps) {
     <Tldraw
       components={components}
       shapeUtils={drawingShapeUtils}
-      persistenceKey="mooncanvas"
+      persistenceKey={persistenceKey}
       {...(licenseKey ? { licenseKey } : {})}
       onMount={(editor) => {
         editor.setCurrentTool("draw");

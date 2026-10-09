@@ -1,7 +1,9 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { Logo } from "@/components/Logo";
 import { OfflineStatus } from "@/components/OfflineStatus";
 import { PwaInstallPrompt } from "@/components/PwaInstallPrompt";
+import { createDocument, getLastDocument, type MoonCanvasDocument } from "@/features/drawing/documents";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -22,6 +24,22 @@ export const Route = createFileRoute("/")({
 });
 
 function Home() {
+  const navigate = useNavigate();
+  const [lastDocument, setLastDocument] = useState<MoonCanvasDocument | null>(null);
+
+  useEffect(() => setLastDocument(getLastDocument()), []);
+
+  const openLastDrawing = () => {
+    const document = lastDocument ?? getLastDocument();
+    navigate({ to: "/draw", search: { document: document.id } });
+  };
+
+  const startNewDrawing = () => {
+    const document = createDocument();
+    setLastDocument(document);
+    navigate({ to: "/draw", search: { document: document.id } });
+  };
+
   return (
     <main className="moon-shell relative flex min-h-dvh flex-col items-center justify-center overflow-hidden px-6 py-16 text-center">
       <div className="moon-orbit absolute size-[min(94vw,38rem)] rounded-full" aria-hidden="true" />
@@ -35,12 +53,20 @@ function Home() {
         <p className="mt-4 max-w-md text-lg text-muted-foreground">
           A warm, private space for ideas, sketches, and moments of calm.
         </p>
-        <Link
-          to="/draw"
+        <button
+          type="button"
+          onClick={openLastDrawing}
           className="mt-10 inline-flex min-h-14 items-center rounded-full bg-primary px-10 text-lg font-bold text-primary-foreground shadow-soft transition-transform hover:scale-[1.02]"
         >
-          Start Drawing
-        </Link>
+          Continue drawing
+        </button>
+        <button
+          type="button"
+          onClick={startNewDrawing}
+          className="moon-secondary-button mt-3 inline-flex min-h-11 items-center justify-center rounded-full px-6 text-sm font-semibold shadow-soft"
+        >
+          Start a new drawing
+        </button>
         <Link
           to="/playback"
           className="moon-secondary-button mt-3 inline-flex min-h-11 items-center rounded-full px-6 text-sm font-semibold shadow-soft"

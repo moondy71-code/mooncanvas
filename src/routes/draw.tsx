@@ -4,10 +4,14 @@ import type { Editor } from "tldraw";
 import { Logo } from "@/components/Logo";
 import { OfflineStatus } from "@/components/OfflineStatus";
 import { DrawingSurface } from "@/features/drawing/DrawingSurface";
+import { getDocument, touchDocument } from "@/features/drawing/documents";
 import type { RecordingHandle } from "@/features/drawing/recordingController";
 import { formatTime, saveSession } from "@/features/recording/session";
 
 export const Route = createFileRoute("/draw")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    document: typeof search["document"] === "string" ? search["document"] : undefined,
+  }),
   head: () => ({
     meta: [
       { title: "Draw — MoonCanvas" },
@@ -27,6 +31,8 @@ export const Route = createFileRoute("/draw")({
 
 function DrawPage() {
   const navigate = useNavigate();
+  const { document: documentId } = Route.useSearch();
+  const document = getDocument(documentId);
   const [showA4, setShowA4] = useState(false);
   const [editor, setEditor] = useState<Editor | null>(null);
   const handle = useRef<RecordingHandle | null>(null);
@@ -47,6 +53,10 @@ function DrawPage() {
   }, []);
 
   // Elapsed timer
+  useEffect(() => {
+    touchDocument(document.id);
+  }, [document.id]);
+
   useEffect(() => {
     if (recStart === null) return;
     const id = setInterval(() => setNow(performance.now()), 250);
@@ -129,7 +139,7 @@ function DrawPage() {
         }`}
       >
         <div className="absolute inset-0">
-          <DrawingSurface showA4={showA4} onEditor={setEditor} />
+          <DrawingSurface key={document.id} showA4={showA4} persistenceKey={document.persistenceKey} onEditor={setEditor} />
         </div>
       </div>
     </div>
