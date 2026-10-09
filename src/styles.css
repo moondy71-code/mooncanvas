@@ -448,16 +448,20 @@ body {
   border: 1px solid rgb(220 220 245 / 25%);
   background: rgb(36 54 87 / 82%);
   color: var(--moon-cream);
+  transition: transform 150ms ease, background 150ms ease, box-shadow 150ms ease;
 }
 .moon-modal-cancel:hover,
 .moon-modal-cancel:focus-visible {
+  transform: translateY(-1px);
   background: rgb(220 220 245 / 15%);
+  box-shadow: 0 6px 14px rgb(3 10 28 / 20%);
   outline: none;
 }
 .moon-modal-primary {
   border: 0;
-  background: var(--moon-yellow);
+  background: #f6de91;
   color: #1f315a;
+  box-shadow: 0 6px 14px rgb(3 10 28 / 20%);
 }
 .moon-modal-primary:disabled {
   cursor: not-allowed;
