@@ -5,8 +5,10 @@ import { OfflineStatus } from "@/components/OfflineStatus";
 import { PwaInstallPrompt } from "@/components/PwaInstallPrompt";
 import {
   createDocument,
-  getLastDocument,
+  deleteDocument,
+  duplicateDocument,
   listDocuments,
+  renameDocument,
   type MoonCanvasDocument,
 } from "@/features/drawing/documents";
 
@@ -31,13 +33,9 @@ export const Route = createFileRoute("/")({
 function Home() {
   const navigate = useNavigate();
   const [documents, setDocuments] = useState<MoonCanvasDocument[]>([]);
+  const [activeMenuId, setActiveMenuId] = useState<string | null>(null);
 
   useEffect(() => setDocuments(listDocuments()), []);
-
-  const openLastDrawing = () => {
-    const document = documents[0] ?? getLastDocument();
-    navigate({ to: "/draw", search: { document: document.id } });
-  };
 
   const openDrawing = (document: MoonCanvasDocument) => {
     navigate({ to: "/draw", search: { document: document.id } });
@@ -47,6 +45,31 @@ function Home() {
     const document = createDocument();
     setDocuments((current) => [document, ...current]);
     navigate({ to: "/draw", search: { document: document.id } });
+  };
+
+  const renameDrawing = (document: MoonCanvasDocument) => {
+    const name = window.prompt("Name this drawing", document.name);
+    if (!name || !renameDocument(document.id, name)) return;
+    setDocuments(listDocuments());
+    setActiveMenuId(null);
+  };
+
+  const duplicateDrawing = async (document: MoonCanvasDocument) => {
+    const duplicate = await duplicateDocument(document);
+    setDocuments(listDocuments());
+    setActiveMenuId(null);
+    openDrawing(duplicate);
+  };
+
+  const removeDrawing = async (document: MoonCanvasDocument) => {
+    if (!window.confirm(`Delete “${document.name}”? This removes it from this device.`)) return;
+    try {
+      await deleteDocument(document);
+      setDocuments(listDocuments());
+    } catch {
+      window.alert("This drawing could not be deleted. Close any other MoonCanvas tabs and try again.");
+    }
+    setActiveMenuId(null);
   };
 
   return (
@@ -64,15 +87,8 @@ function Home() {
         </p>
         <button
           type="button"
-          onClick={openLastDrawing}
-          className="mt-10 inline-flex min-h-14 items-center rounded-full bg-primary px-10 text-lg font-bold text-primary-foreground shadow-soft transition-transform hover:scale-[1.02]"
-        >
-          Continue drawing
-        </button>
-        <button
-          type="button"
           onClick={startNewDrawing}
-          className="moon-secondary-button mt-3 inline-flex min-h-11 items-center justify-center rounded-full px-6 text-sm font-semibold shadow-soft"
+          className="mt-10 inline-flex min-h-14 items-center justify-center rounded-full bg-primary px-10 text-lg font-bold text-primary-foreground shadow-soft transition-transform hover:scale-[1.02]"
         >
           Start a new drawing
         </button>
@@ -84,36 +100,44 @@ function Home() {
             <span className="text-xs font-semibold text-muted-foreground">Stored on this device</span>
           </div>
           <div className="mt-3 grid gap-2">
-            {documents.map((document, index) => (
-              <button
-                type="button"
-                key={document.id}
-                onClick={() => openDrawing(document)}
-                className="moon-drawing-card flex min-h-14 items-center justify-between gap-4 rounded-2xl px-4 py-3 text-left"
-              >
-                <span>
-                  <span className="block font-semibold text-foreground">
-                    {document.id === "last" ? "Earlier drawing" : `Drawing ${documents.length - index}`}
-                  </span>
+            {documents.map((document) => (
+              <div key={document.id} className="moon-drawing-card relative flex min-h-14 items-center gap-2 rounded-2xl px-4 py-3 text-left">
+                <button type="button" onClick={() => openDrawing(document)} className="min-w-0 flex-1 text-left">
+                  <span className="block truncate font-semibold text-foreground">{document.name}</span>
                   <span className="mt-0.5 block text-xs text-muted-foreground">
                     {document.updatedAt ? `Last opened ${formatDocumentDate(document.updatedAt)}` : "Saved on this device"}
                   </span>
-                </span>
-                <span className="text-sm font-bold text-primary" aria-hidden="true">Open</span>
-              </button>
+                </button>
+                <button
+                  type="button"
+                  className="moon-drawing-menu-button"
+                  aria-label={`Options for ${document.name}`}
+                  aria-expanded={activeMenuId === document.id}
+                  onClick={() => setActiveMenuId((current) => (current === document.id ? null : document.id))}
+                >
+                  ⋮
+                </button>
+                {activeMenuId === document.id ? (
+                  <div className="moon-drawing-menu" role="menu" aria-label={`Options for ${document.name}`}>
+                    <button type="button" role="menuitem" onClick={() => renameDrawing(document)}>Rename</button>
+                    <button type="button" role="menuitem" onClick={() => void duplicateDrawing(document)}>Duplicate</button>
+                    <button type="button" role="menuitem" className="is-danger" onClick={() => void removeDrawing(document)}>Delete</button>
+                  </div>
+                ) : null}
+              </div>
             ))}
           </div>
         </section>
+        <PwaInstallPrompt />
         <Link
           to="/playback"
-          className="moon-secondary-button mt-3 inline-flex min-h-11 items-center rounded-full px-6 text-sm font-semibold shadow-soft"
+          className="moon-secondary-button mt-7 inline-flex min-h-11 items-center rounded-full px-6 text-sm font-semibold shadow-soft"
         >
           Open recording
         </Link>
-        <PwaInstallPrompt />
       </div>
       <p className="absolute inset-x-0 bottom-[max(1.25rem,env(safe-area-inset-bottom))] px-6 text-xs font-semibold tracking-wide text-muted-foreground/75">
-        Your drawings stay on this device.
+        Created by moondy712016@gmail.com
       </p>
     </main>
   );

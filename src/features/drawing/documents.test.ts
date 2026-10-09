@@ -1,5 +1,12 @@
 import { afterEach, describe, expect, it } from "vitest";
-import { createDocument, getDocument, getLastDocument, listDocuments, touchDocument } from "./documents";
+import {
+  createDocument,
+  getDocument,
+  getLastDocument,
+  listDocuments,
+  renameDocument,
+  touchDocument,
+} from "./documents";
 
 afterEach(() => localStorage.clear());
 
@@ -27,5 +34,11 @@ describe("drawing documents", () => {
     const second = createDocument();
     touchDocument(first.id);
     expect(listDocuments().map((document) => document.id)).toEqual([first.id, second.id, "last"]);
+  });
+
+  it("renames a drawing without changing its persistence key", () => {
+    const document = createDocument();
+    expect(renameDocument(document.id, "Moon sketch")).toBe(true);
+    expect(getDocument(document.id)).toMatchObject({ name: "Moon sketch", persistenceKey: document.persistenceKey });
   });
 });

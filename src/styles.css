@@ -342,7 +342,7 @@ body {
   border: 1px solid rgb(220 220 245 / 18%);
 }
 .moon-drawing-list {
-  max-height: min(38svh, 20rem);
+  max-height: 12.5rem;
   overflow: auto;
   padding-right: 2px;
 }
@@ -351,6 +351,56 @@ body {
   border: 1px solid rgb(220 220 245 / 22%);
   background: rgb(36 54 87 / 82%);
   transition: background 150ms ease, border-color 150ms ease, transform 150ms ease;
+}
+.moon-drawing-menu-button {
+  display: grid;
+  width: 32px;
+  height: 32px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--moon-lavender);
+  font-size: 21px;
+  line-height: 1;
+}
+.moon-drawing-menu-button:hover,
+.moon-drawing-menu-button:focus-visible {
+  background: rgb(220 220 245 / 15%);
+  color: var(--moon-cream);
+  outline: none;
+}
+.moon-drawing-menu {
+  position: absolute;
+  z-index: 3;
+  top: calc(100% - 8px);
+  right: 10px;
+  display: grid;
+  min-width: 124px;
+  overflow: hidden;
+  border: 1px solid rgb(220 220 245 / 30%);
+  border-radius: 12px;
+  background: #30466d;
+  box-shadow: 0 12px 28px rgb(3 10 28 / 48%);
+}
+.moon-drawing-menu button {
+  min-height: 38px;
+  border: 0;
+  background: transparent;
+  padding: 0 14px;
+  color: var(--moon-cream);
+  font-size: 13px;
+  font-weight: 700;
+  text-align: left;
+}
+.moon-drawing-menu button:hover,
+.moon-drawing-menu button:focus-visible {
+  background: rgb(220 220 245 / 15%);
+  outline: none;
+}
+.moon-drawing-menu button.is-danger {
+  color: #ffb7bb;
 }
 .moon-drawing-card:hover,
 .moon-drawing-card:focus-visible {
