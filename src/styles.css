@@ -462,6 +462,14 @@ body {
   background: #f6de91;
   color: #1f315a;
   box-shadow: 0 6px 14px rgb(3 10 28 / 20%);
+  transition: transform 150ms ease, background 150ms ease, box-shadow 150ms ease;
+}
+.moon-modal-primary:not(:disabled):hover,
+.moon-modal-primary:not(:disabled):focus-visible {
+  transform: translateY(-1px);
+  background: #ffe9a8;
+  box-shadow: 0 8px 16px rgb(3 10 28 / 26%);
+  outline: none;
 }
 .moon-modal-primary:disabled {
   cursor: not-allowed;
