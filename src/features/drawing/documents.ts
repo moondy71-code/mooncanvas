@@ -35,6 +35,11 @@ export function getLastDocument() {
   return read().at(-1) ?? LEGACY_DOCUMENT;
 }
 
+/** Returns the browser-local drawings with the most recently opened first. */
+export function listDocuments() {
+  return read().toReversed();
+}
+
 export function createDocument() {
   const createdAt = new Date().toISOString();
   const id = globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(36).slice(2)}`;

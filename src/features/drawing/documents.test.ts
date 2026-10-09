@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it } from "vitest";
-import { createDocument, getDocument, getLastDocument, touchDocument } from "./documents";
+import { createDocument, getDocument, getLastDocument, listDocuments, touchDocument } from "./documents";
 
 afterEach(() => localStorage.clear());
 
@@ -20,5 +20,12 @@ describe("drawing documents", () => {
     touchDocument(first.id);
     expect(getLastDocument().id).toBe(first.id);
     expect(getDocument(second.id)).toEqual(second);
+  });
+
+  it("lists drawings with the most recently opened first", () => {
+    const first = createDocument();
+    const second = createDocument();
+    touchDocument(first.id);
+    expect(listDocuments().map((document) => document.id)).toEqual([first.id, second.id, "last"]);
   });
 });

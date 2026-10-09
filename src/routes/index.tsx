@@ -3,7 +3,12 @@ import { useEffect, useState } from "react";
 import { Logo } from "@/components/Logo";
 import { OfflineStatus } from "@/components/OfflineStatus";
 import { PwaInstallPrompt } from "@/components/PwaInstallPrompt";
-import { createDocument, getLastDocument, type MoonCanvasDocument } from "@/features/drawing/documents";
+import {
+  createDocument,
+  getLastDocument,
+  listDocuments,
+  type MoonCanvasDocument,
+} from "@/features/drawing/documents";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -25,18 +30,22 @@ export const Route = createFileRoute("/")({
 
 function Home() {
   const navigate = useNavigate();
-  const [lastDocument, setLastDocument] = useState<MoonCanvasDocument | null>(null);
+  const [documents, setDocuments] = useState<MoonCanvasDocument[]>([]);
 
-  useEffect(() => setLastDocument(getLastDocument()), []);
+  useEffect(() => setDocuments(listDocuments()), []);
 
   const openLastDrawing = () => {
-    const document = lastDocument ?? getLastDocument();
+    const document = documents[0] ?? getLastDocument();
+    navigate({ to: "/draw", search: { document: document.id } });
+  };
+
+  const openDrawing = (document: MoonCanvasDocument) => {
     navigate({ to: "/draw", search: { document: document.id } });
   };
 
   const startNewDrawing = () => {
     const document = createDocument();
-    setLastDocument(document);
+    setDocuments((current) => [document, ...current]);
     navigate({ to: "/draw", search: { document: document.id } });
   };
 
@@ -67,6 +76,34 @@ function Home() {
         >
           Start a new drawing
         </button>
+        <section className="moon-drawing-list mt-7 w-full max-w-md text-left" aria-labelledby="your-drawings-heading">
+          <div className="flex items-baseline justify-between gap-4 px-1">
+            <h2 id="your-drawings-heading" className="font-display text-2xl text-foreground">
+              Your drawings
+            </h2>
+            <span className="text-xs font-semibold text-muted-foreground">Stored on this device</span>
+          </div>
+          <div className="mt-3 grid gap-2">
+            {documents.map((document, index) => (
+              <button
+                type="button"
+                key={document.id}
+                onClick={() => openDrawing(document)}
+                className="moon-drawing-card flex min-h-14 items-center justify-between gap-4 rounded-2xl px-4 py-3 text-left"
+              >
+                <span>
+                  <span className="block font-semibold text-foreground">
+                    {document.id === "last" ? "Earlier drawing" : `Drawing ${documents.length - index}`}
+                  </span>
+                  <span className="mt-0.5 block text-xs text-muted-foreground">
+                    {document.updatedAt ? `Last opened ${formatDocumentDate(document.updatedAt)}` : "Saved on this device"}
+                  </span>
+                </span>
+                <span className="text-sm font-bold text-primary" aria-hidden="true">Open</span>
+              </button>
+            ))}
+          </div>
+        </section>
         <Link
           to="/playback"
           className="moon-secondary-button mt-3 inline-flex min-h-11 items-center rounded-full px-6 text-sm font-semibold shadow-soft"
@@ -80,4 +117,11 @@ function Home() {
       </p>
     </main>
   );
+}
+
+function formatDocumentDate(value: string) {
+  const date = new Date(value);
+  return Number.isNaN(date.valueOf())
+    ? "recently"
+    : new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeStyle: "short" }).format(date);
 }
