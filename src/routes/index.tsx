@@ -173,7 +173,7 @@ function Home() {
                 <input id="drawing-name" className="moon-modal-input mt-5" autoFocus value={modal.name ?? ""} onChange={(event) => setModal({ ...modal, name: event.target.value })} />
                 <div className="mt-5 flex justify-end gap-3">
                   <button type="button" className="moon-modal-cancel" onClick={() => setModal(null)}>Cancel</button>
-                  <button type="submit" className="moon-modal-primary">Save</button>
+                  <button type="submit" className="moon-modal-primary" disabled={!modal.name?.trim()}>Save</button>
                 </div>
               </form>
             ) : null}

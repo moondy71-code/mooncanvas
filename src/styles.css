@@ -459,10 +459,23 @@ body {
   background: var(--moon-yellow);
   color: #1f315a;
 }
+.moon-modal-primary:disabled {
+  cursor: not-allowed;
+  background: rgb(220 220 245 / 20%);
+  color: rgb(220 220 245 / 48%);
+}
 .moon-modal-danger {
   border: 0;
   background: #9f4255;
   color: white;
+  transition: transform 150ms ease, background 150ms ease, box-shadow 150ms ease;
+}
+.moon-modal-danger:hover,
+.moon-modal-danger:focus-visible {
+  transform: translateY(-1px);
+  background: #b75064;
+  box-shadow: 0 6px 14px rgb(3 10 28 / 26%);
+  outline: none;
 }
 .moon-drawing-card:hover,
 .moon-drawing-card:focus-visible {
