@@ -101,7 +101,7 @@ function Home() {
           </div>
           <div className="mt-3 grid gap-2">
             {documents.map((document) => (
-              <div key={document.id} className="moon-drawing-card relative flex min-h-14 items-center gap-2 rounded-2xl px-4 py-3 text-left">
+              <div key={document.id} className="moon-drawing-card flex min-h-14 flex-wrap items-center gap-2 rounded-2xl px-4 py-3 text-left">
                 <button type="button" onClick={() => openDrawing(document)} className="min-w-0 flex-1 text-left">
                   <span className="block truncate font-semibold text-foreground">{document.name}</span>
                   <span className="mt-0.5 block text-xs text-muted-foreground">
@@ -113,12 +113,13 @@ function Home() {
                   className="moon-drawing-menu-button"
                   aria-label={`Options for ${document.name}`}
                   aria-expanded={activeMenuId === document.id}
+                  aria-controls={`drawing-options-${document.id}`}
                   onClick={() => setActiveMenuId((current) => (current === document.id ? null : document.id))}
                 >
                   ⋮
                 </button>
                 {activeMenuId === document.id ? (
-                  <div className="moon-drawing-menu" role="menu" aria-label={`Options for ${document.name}`}>
+                  <div id={`drawing-options-${document.id}`} className="moon-drawing-menu" role="menu" aria-label={`Options for ${document.name}`}>
                     <button type="button" role="menuitem" onClick={() => renameDrawing(document)}>Rename</button>
                     <button type="button" role="menuitem" onClick={() => void duplicateDrawing(document)}>Duplicate</button>
                     <button type="button" role="menuitem" className="is-danger" onClick={() => void removeDrawing(document)}>Delete</button>

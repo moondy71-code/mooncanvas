@@ -372,12 +372,10 @@ body {
   outline: none;
 }
 .moon-drawing-menu {
-  position: absolute;
-  z-index: 3;
-  top: calc(100% - 8px);
-  right: 10px;
   display: grid;
-  min-width: 124px;
+  width: 100%;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 2px;
   overflow: hidden;
   border: 1px solid rgb(220 220 245 / 30%);
   border-radius: 12px;
@@ -385,14 +383,18 @@ body {
   box-shadow: 0 12px 28px rgb(3 10 28 / 48%);
 }
 .moon-drawing-menu button {
-  min-height: 38px;
+  min-height: 42px;
   border: 0;
+  border-right: 1px solid rgb(220 220 245 / 18%);
   background: transparent;
-  padding: 0 14px;
+  padding: 0 8px;
   color: var(--moon-cream);
   font-size: 13px;
   font-weight: 700;
-  text-align: left;
+  text-align: center;
+}
+.moon-drawing-menu button:last-child {
+  border-right: 0;
 }
 .moon-drawing-menu button:hover,
 .moon-drawing-menu button:focus-visible {
